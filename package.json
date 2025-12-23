@@ -1,0 +1,37 @@
+{
+  "name": "my-big-project",
+  "version": "1.0.0",
+  "description": "https://lehrer-kg.vercel.app/",
+  "main": "index.js",
+  "scripts": {
+    "// --- УСТАНОВКА ---": "",
+    "install:client": "npm install --prefix client",
+    "install:server": "npm install --prefix server",
+    "install:all": "npm install && npm run install:client && npm run install:server",
+    "// --- ЗАПУСК ---": "",
+    "dev:client": "npm run dev --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "// --- ГЛАВНЫЕ КОМАНДЫ ---": "",
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:server\" \"npm run dev:client\"",
+    "start": "npm run install:all && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Asad220520/lehrer-kg.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Asad220520/lehrer-kg/issues"
+  },
+  "homepage": "https://github.com/Asad220520/lehrer-kg#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "tailwindcss": "^4.1.18"
+  }
+}
