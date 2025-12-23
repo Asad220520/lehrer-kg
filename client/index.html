@@ -1,23 +1,22 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lehrer KG</title>
-    
+
     <script>
       (function() {
-        try {
-          const localTheme = localStorage.getItem('theme');
-          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          
-          if (localTheme === 'dark' || (!localTheme && systemTheme)) {
-            document.documentElement.classList.add('dark');
-          } else {
-            document.documentElement.classList.remove('dark');
-          }
-        } catch (e) {}
+        // Проверяем localStorage и системные настройки
+        if (
+          localStorage.theme === 'dark' || 
+          (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        ) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
       })();
     </script>
     </head>

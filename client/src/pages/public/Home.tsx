@@ -2,20 +2,19 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, Navigate, useSearchParams } from "react-router-dom";
 import { useUserStore } from "@/entities/user/model/store";
-// useThemeStore удалили, он теперь внутри компонента
 import { Button } from "@/shared/ui/Button/Button";
 import { GoogleLoginButton } from "@/features/auth/ui/GoogleLoginButton";
-import { ThemeSwitcher } from "@/features/theme/ThemeSwitcher"; // <--- 1. Импорт свитчера
-import { Globe } from "lucide-react"; // Moon и Sun удалили, они внутри свитчера
+import { ThemeSwitcher } from "@/features/theme/ThemeSwitcher";
+import { Globe } from "lucide-react";
 
 const Home = () => {
   const { t, i18n } = useTranslation();
-  // const { toggleTheme } ... <-- 2. Эту строку удалили, она ломала сборку
   const { isAuth, loginAsGuest, setToken, user } = useUserStore();
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  // Логика обработки токена после входа через Google
   useEffect(() => {
     const token = searchParams.get("token");
     if (token) {
@@ -30,6 +29,7 @@ const Home = () => {
     }
   }, [searchParams, setToken, navigate]);
 
+  // Если пользователь уже авторизован — редиректим
   if (isAuth && user) {
     if (user.role === "admin") return <Navigate to="/admin" replace />;
     return <Navigate to="/" replace />;
@@ -44,7 +44,6 @@ const Home = () => {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Верхняя панель (Настройки) */}
       <div className="absolute top-6 right-6 flex gap-3">
-        {/* 3. ВСТАВИЛИ ГОТОВЫЙ КОМПОНЕНТ */}
         <ThemeSwitcher />
 
         <Button variant="ghost" size="sm" onClick={toggleLang}>
@@ -73,7 +72,7 @@ const Home = () => {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-white dark:bg-gray-800 px-2 text-gray-500">
-                Or
+                {t('or')}
               </span>
             </div>
           </div>
