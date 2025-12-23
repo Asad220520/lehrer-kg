@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { $api } from "@/shared/api/api";
-import { Trash2, Shield, User as UserIcon } from "lucide-react";
+import { Trash2, User as UserIcon } from "lucide-react";
 
 interface User {
   _id: string;

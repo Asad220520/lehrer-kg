@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Sidebar, Header } from "@/widgets"; 
+import { Sidebar, Header } from "@/widgets/index"; 
 
 export const MainLayout = () => {
   return (

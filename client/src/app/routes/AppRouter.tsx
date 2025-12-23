@@ -1,17 +1,16 @@
 import {
   createBrowserRouter,
   RouterProvider,
-  Navigate,
 } from "react-router-dom";
 import { MainLayout } from "@/app/layouts/MainLayout";
 import { AuthLayout } from "@/app/layouts/AuthLayout";
 import { AuthGuard } from "./AuthGuard";
-import { RoleGuard } from "./RoleGuard"; // Импортируем Guard
 
 import Home from "@/pages/public/Home";
 import Dashboard from "@/pages/admin/Dashboard";
 import UsersPage from "@/pages/admin/UsersPage";
-import UserDashboard from "@/pages/user/UserDashboard"; // Наш новый файл
+import UserDashboard from "@/pages/user/UserDashboard"; 
+import { RoleGuard } from "./RoleGuard";
 
 const router = createBrowserRouter([
   // 1. ЛОГИН (Публичный)

@@ -1,21 +1,21 @@
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next"; // Хук перевода
+import { useTranslation } from "react-i18next";
 import { useNavigate, Navigate, useSearchParams } from "react-router-dom";
 import { useUserStore } from "@/entities/user/model/store";
-import { useThemeStore } from "@/features/theme/themeStore";
-import { Button } from "@/shared/ui/Button/Button"; // Наша новая кнопка
+// useThemeStore удалили, он теперь внутри компонента
+import { Button } from "@/shared/ui/Button/Button";
 import { GoogleLoginButton } from "@/features/auth/ui/GoogleLoginButton";
-import { Moon, Sun, Globe } from "lucide-react";
+import { ThemeSwitcher } from "@/features/theme/ThemeSwitcher"; // <--- 1. Импорт свитчера
+import { Globe } from "lucide-react"; // Moon и Sun удалили, они внутри свитчера
 
 const Home = () => {
   const { t, i18n } = useTranslation();
-  const { toggleTheme, theme } = useThemeStore();
+  // const { toggleTheme } ... <-- 2. Эту строку удалили, она ломала сборку
   const { isAuth, loginAsGuest, setToken, user } = useUserStore();
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // Логика токена (как и раньше)
   useEffect(() => {
     const token = searchParams.get("token");
     if (token) {
@@ -30,13 +30,11 @@ const Home = () => {
     }
   }, [searchParams, setToken, navigate]);
 
-  // Редиректы если уже вошел
   if (isAuth && user) {
     if (user.role === "admin") return <Navigate to="/admin" replace />;
     return <Navigate to="/" replace />;
   }
 
-  // Смена языка
   const toggleLang = () => {
     const newLang = i18n.language === "ru" ? "en" : "ru";
     i18n.changeLanguage(newLang);
@@ -46,9 +44,9 @@ const Home = () => {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Верхняя панель (Настройки) */}
       <div className="absolute top-6 right-6 flex gap-3">
-        <Button variant="ghost" size="sm" onClick={toggleTheme}>
-          {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-        </Button>
+        {/* 3. ВСТАВИЛИ ГОТОВЫЙ КОМПОНЕНТ */}
+        <ThemeSwitcher />
+
         <Button variant="ghost" size="sm" onClick={toggleLang}>
           <Globe size={20} className="mr-2" />
           {i18n.language.toUpperCase()}
@@ -65,7 +63,6 @@ const Home = () => {
         </div>
 
         <div className="space-y-4">
-          {/* Google Button внутри контейнера */}
           <div className="flex justify-center">
             <GoogleLoginButton />
           </div>
