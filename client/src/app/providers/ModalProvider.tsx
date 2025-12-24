@@ -7,7 +7,7 @@ import { useState } from "react";
 import { $api } from "@/shared/api/api";
 
 export const ModalProvider = () => {
-  const { type, props, closeModal } = useModalStore();
+  const { type, closeModal } = useModalStore();
   const { t } = useTranslation();
   const { user, fetchUser, logout } = useUserStore(); // Достаем методы
 

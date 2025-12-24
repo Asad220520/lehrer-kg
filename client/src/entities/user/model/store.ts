@@ -1,44 +1,33 @@
 import { create } from "zustand";
 import { $api } from "@/shared/api/api";
+// ОШИБКА БЫЛА ТУТ: добавляем "type" перед фигурными скобками или внутри
+import type { User, UserState } from "./types";
 
-interface User {
-  _id: string;
-  name: string;
-  role: "admin" | "user" | "guest"; // <--- Добавили 'guest'
-  avatar?: string;
-}
-
-interface UserState {
-  isAuth: boolean;
-  user: User | null;
-  isLoading: boolean;
-  setToken: (token: string) => void;
-  loginAsGuest: () => void; // <--- Новый метод
-  logout: () => void;
-  fetchUser: () => Promise<void>;
-}
-
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<UserState>((set, get) => ({
   isAuth: !!localStorage.getItem("token"),
   user: null,
-  isLoading: false,
+  isLoading: false, // Теперь это поле легально
+
+  login: (user: User, token: string) => {
+    localStorage.setItem("token", token);
+    set({ user, isAuth: true });
+  },
 
   setToken: (token) => {
     localStorage.setItem("token", token);
     set({ isAuth: true });
   },
 
-  // Вход как гость (без токена, просто меняем стейт)
   loginAsGuest: () => {
-    set({
-      isAuth: true,
-      user: {
-        _id: "guest",
-        name: "Гость",
-        role: "guest",
-        avatar: "",
-      },
-    });
+    const guestUser: User = {
+      _id: "guest", // Теперь это легально (совпадает с types.ts)
+      name: "Гость",
+      email: "guest@lehrer.kg",
+      role: "guest",
+      avatar: "",
+      createdAt: new Date().toISOString(),
+    };
+    set({ isAuth: true, user: guestUser });
   },
 
   logout: () => {
@@ -47,17 +36,18 @@ export const useUserStore = create<UserState>((set) => ({
   },
 
   fetchUser: async () => {
-    // Если мы в режиме гостя - не делаем запрос на сервер
-    if (useUserStore.getState().user?.role === "guest") return;
+    if (get().user?.role === "guest") return;
 
-    set({ isLoading: true });
+    set({ isLoading: true }); // Ошибки не будет
     try {
       const { data } = await $api.get<User>("/users/me");
       set({ user: data, isAuth: true });
     } catch (error) {
+      console.error("Auth Error:", error);
+      localStorage.removeItem("token");
       set({ isAuth: false, user: null });
     } finally {
-      set({ isLoading: false });
+      set({ isLoading: false }); // Ошибки не будет
     }
   },
 }));

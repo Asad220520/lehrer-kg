@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Home, BookOpen, Trophy, User, History } from "lucide-react";
+import { Home, BookOpen, Trophy, User } from "lucide-react";
 import clsx from "clsx";
 
 export const BottomNavigation = () => {
