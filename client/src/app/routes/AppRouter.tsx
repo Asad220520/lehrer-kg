@@ -1,44 +1,50 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import { MainLayout } from "@/app/layouts/MainLayout";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AuthLayout } from "@/app/layouts/AuthLayout";
-import { AuthGuard } from "./AuthGuard";
+import { MainLayout } from "@/app/layouts/MainLayout"; // Админский лейаут
+import { UserLayout } from "@/app/layouts/UserLayout"; // <--- НАШ НОВЫЙ ЛЕЙАУТ
 
-import Home from "@/pages/public/Home";
-import Dashboard from "@/pages/admin/Dashboard";
-import UsersPage from "@/pages/admin/UsersPage";
-import UserDashboard from "@/pages/user/UserDashboard"; 
+import { AuthGuard } from "./AuthGuard";
 import { RoleGuard } from "./RoleGuard";
 
+import Home from "@/pages/public/Home";
+import Dashboard from "@/pages/admin/Dashboard"; // Админский
+import UsersPage from "@/pages/admin/UsersPage"; // Админский
+import UserDashboard from "@/pages/user/UserDashboard"; // Юзерский Dashboard
+import ProfilePage from "@/pages/user/ProfilePage";
+
 const router = createBrowserRouter([
-  // 1. ЛОГИН (Публичный)
+  // 1. Публичные
   {
     element: <AuthLayout />,
     children: [{ path: "/login", element: <Home /> }],
   },
 
-  // 2. ЗАЩИЩЕННЫЕ МАРШРУТЫ (Нужен вход)
+  // 2. ЗАЩИЩЕННЫЕ
   {
     element: <AuthGuard />,
     children: [
-      // А) Маршрут для ОБЫЧНЫХ ЮЗЕРОВ (корень /)
+      // А) ЗОНА USER (Ученики)
       {
         path: "/",
-        element: <UserDashboard />,
+        element: <UserLayout />, // <--- Обернули в новый Layout
+        children: [
+          { index: true, element: <UserDashboard /> },
+          { path: "tests", element: <div>Тут будут тесты</div> },
+          { path: "history", element: <div>Тут история</div> },
+          { path: "profile", element: <ProfilePage /> },
+        ],
       },
 
-      // Б) Маршрут ТОЛЬКО ДЛЯ АДМИНОВ
+      // Б) ЗОНА ADMIN (Учитель)
       {
-        element: <RoleGuard roles={["admin"]} />, // <--- ГЛАВНАЯ ЗАЩИТА ТУТ
+        path: "/admin",
+        element: <RoleGuard roles={["admin"]} />,
         children: [
           {
-            element: <MainLayout />, // Админский лейаут с сайдбаром
+            element: <MainLayout />,
             children: [
-              { path: "/admin", element: <Dashboard /> },
-              { path: "/admin/users", element: <UsersPage /> },
-              // Другие админские страницы...
+              { index: true, element: <Dashboard /> },
+              { path: "users", element: <UsersPage /> },
             ],
           },
         ],
@@ -46,7 +52,6 @@ const router = createBrowserRouter([
     ],
   },
 
-  // 404
   { path: "*", element: <div>404 Not Found</div> },
 ]);
 

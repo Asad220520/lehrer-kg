@@ -28,3 +28,23 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).json({ message: "Ошибка сервера" });
   }
 };
+
+// Обновить свой профиль
+exports.updateMe = async (req, res) => {
+  try {
+    const { name, avatar } = req.body;
+
+    // Обновляем только разрешенные поля
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    if (name) user.name = name;
+    if (avatar) user.avatar = avatar;
+
+    await user.save();
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

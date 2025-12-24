@@ -6,7 +6,7 @@ const roleMiddleware = require("../middlewares/role.middleware");
 
 // Получить профиль (Для всех авторизованных)
 router.get("/me", authMiddleware, userController.getMe);
-
+router.put("/me", authMiddleware, userController.updateMe);
 // Получить ВСЕХ юзеров (ТОЛЬКО ДЛЯ ADMIN)
 router.get(
   "/",
