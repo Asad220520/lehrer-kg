@@ -11,6 +11,7 @@ import Dashboard from "@/pages/admin/Dashboard"; // Админский
 import UsersPage from "@/pages/admin/UsersPage"; // Админский
 import UserDashboard from "@/pages/user/UserDashboard"; // Юзерский Dashboard
 import ProfilePage from "@/pages/user/ProfilePage";
+import GamePage from "@/pages/game/GamePage";
 
 const router = createBrowserRouter([
   // 1. Публичные
@@ -34,7 +35,10 @@ const router = createBrowserRouter([
           { path: "profile", element: <ProfilePage /> },
         ],
       },
-
+      {
+        path: "/play/:id", // Например /play/123
+        element: <GamePage />,
+      },
       // Б) ЗОНА ADMIN (Учитель)
       {
         path: "/admin",
